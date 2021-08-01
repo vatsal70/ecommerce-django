@@ -1,0 +1,199 @@
+{% extends 'shop/basic.html' %}
+{% block css %}
+h1 {
+    margin-bottom: 0.5rem;
+    margin-right: 7.5rem;
+    /* font-style: unset; */
+    font-weight: 300;
+    color: aliceblue;
+    font-family: 'Amatic SC', cursive;
+}
+.card-img, .card-img-top {
+    border-top-left-radius: calc(.25rem - 1px);
+    height: 200px;
+    border-top-right-radius: calc(.25rem - 1px);
+}
+.carousel-indicators li {
+    box-sizing: content-box;
+    -ms-flex: 0 1 auto;
+    flex: 0 1 auto;
+    width: 40px;
+    height: 3px;
+    margin-right: 3px;
+    margin-left: 3px;
+    text-indent: -999px;
+    cursor: pointer;
+    background-color: #fff;
+    background-clip: padding-box;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    opacity: .5;
+    transition: opacity .6s ease;
+}
+.carousel-control-next, .carousel-control-prev {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3%;
+    color: #fff;
+    text-align: center;
+    opacity: .5;
+    transition: opacity .15s ease;
+}
+button, select {
+    text-transform: none;
+    background: blue;
+}
+.col-md-3 {
+          display: inline-block;
+          margin-left:-4px;
+}
+
+.carousel-indicators .active {
+          background-color: blue;
+}
+ .col-md-3 img {
+          width: 290px;
+          height: 230px;
+}
+body .carousel-indicator li {
+          background-color: blue;
+}
+body .carousel-indicators {
+          bottom: -29px;
+}
+body .carousel-control-prev-icon,
+body .carousel-control-next-icon {
+          background-color: blue;
+}
+.carousel-control-prev,
+.carousel-control-next{
+          top: auto;
+          bottom: auto;
+}
+.carousel-control-prev {
+          left: 113px;
+          padding-top: 250px;
+}
+.carousel-control-next {
+          right: 82px;
+          padding-top: 250px;
+}
+body .no-padding {
+           padding-left: 0,
+           padding-right: 0;
+}
+.h2, h2{
+    font-size: 2.5rem;
+    text-align: center;
+}
+button.cart {
+    text-transform: none;
+    background: blue;
+    margin-left: 65px;
+}
+img {
+    vertical-align: middle;
+    border-style: none;
+    border: 2px solid;
+    border-radius: 30px;
+}
+{% endblock %}
+{% block title%} {{product.product_name}} - My Awesome Cart{% endblock %}
+{% block body %}
+<div class="container my-4">
+    <div class="row">
+    <div class="col-md-4">
+    <div class="row">
+        <img src="/media/{{product.image}}" width="233px" height="385px">
+    </div>
+         <div class="row mt-2">
+            <span id="divpr{{i.id}}" class="divpr">
+              <button id="pr{{i.id}}" class="btn btn-primary cart ">Add To Cart</button>
+                    </span>
+
+        </div>
+
+
+    </div>
+
+    <div class="col-md-8">
+        <h5>{{product.product_name}}</h5>
+        <p><b>Rs.{{product.price}} </b></p>
+        <p>{{product.desc}}</p>
+
+
+    </div>
+    </div>
+
+
+</div>
+
+
+
+
+
+{% endblock %}
+
+
+
+
+{% block js %}
+<script>
+// Find out the cart items from localStorage
+if (localStorage.getItem('cart') == null) {
+    var cart = {};
+} else {
+    cart = JSON.parse(localStorage.getItem('cart'));
+    updateCart(cart);
+}
+
+function clearCart(){
+        cart = JSON.parse(localStorage.getItem('cart'));
+        localStorage.clear();
+        cart = {};
+        updateCart(cart);
+        updatePopover(cart);
+}
+
+function updateCart(cart) {
+    updatePopover(cart);
+    var sum = 0;
+    for (var item in cart) {
+        sum = sum + cart[item][0];
+    }
+    localStorage.setItem('cart', JSON.stringify(cart));
+    document.getElementById('cart').innerHTML = sum;
+}
+
+
+
+
+//Add Popover to cart
+$('#popcart').popover();
+updatePopover(cart);
+function updatePopover(cart){
+
+    var popStr = "";
+    popStr = popStr + "<h5> Cart for your items ! </h5><div class='mx-2 my-2'>";
+    var i = 1;
+    for (var item in cart){
+        popStr = popStr + "<b>" + i + "</b>. ";
+        popStr = popStr + cart[item][1].slice(0,10) + "... Qty: " + cart[item][0]  + "   Price: "+ cart[item][2] + "/-"+ '<br>';
+        i = i+1;
+    }
+    popStr = popStr + "</div>"
+    document.getElementById('popcart').setAttribute('data-content', popStr);
+    $('#popcart').popover('show');
+}
+
+{% if que %}
+alert('Thanks for contacting with us. We will get back to you soon!');
+document.location = "/shop/contact";
+{% endif %}
+</script>
+{% endblock %}

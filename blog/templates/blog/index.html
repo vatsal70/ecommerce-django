@@ -1,0 +1,47 @@
+{% extends 'blog/basic.html' %}
+{% block title %} Blog - STH {% endblock %}
+{% block css %}
+.rounded {
+    border-radius: 2.25rem!important;
+}
+.imge{
+border-radius: 2.25rem!important;
+}
+{% endblock %}
+{% block body %}
+{% load static %}
+<div class="container">
+
+    <div class="row my-2">
+        {% for post in object_list  %}
+ <div class="col-md-6">
+            <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                <div class="col p-4 d-flex flex-column position-static" style="
+    background-color: floralwhite;">
+                    <strong class="d-inline-block mb-2 text-primary">{{post.category|title}}</strong>
+                    <h3 class="mb-0">{{post.title}}</h3>
+
+                    <div class="mb-1 text-muted">{{post.sub_title}}</div><br>
+                    <p>{{post.pub_date}}</p>
+                     <a style="text-decoration:none" href="{% url 'categoryView' post.category|slugify %}" >Related to '{{post.category|title}}'</a>
+                    <a style="text-decoration:none" href="{% url 'blogPost' post.pk %}" >Continue reading</a>
+                </div>
+                <div class="col-auto d-none d-lg-block imge">
+                    <img src="/media/{{post.header_image}}"  class="bd-placeholder-img" width="200" height="260"
+                        aria-label="Placeholder: Thumbnail"/>
+                        
+
+                </div>
+            </div>
+        </div>
+{% if forloop.counter|divisibleby:2 %}
+    </div>
+    <div class="row my-2">
+    {% endif %}
+
+    {% endfor %}
+
+    </div>
+    </div>
+
+{% endblock %}

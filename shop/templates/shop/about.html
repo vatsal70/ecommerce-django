@@ -1,0 +1,117 @@
+{% extends 'shop/basic.html' %}
+
+{% block title %} About Us - STH {% endblock %}
+
+{% block css %}
+h1 {
+    margin-bottom: 0.5rem;
+    margin-right: 11.5rem;
+    /* font-style: unset; */
+    font-weight: 300;
+    color: aliceblue;
+    font-family: 'Amatic SC', cursive;
+}{% endblock%}
+{% block body %}
+<div class="col">
+    <div class="row mx-3 my-3 row-xs-3 row-sm-3 row-md-3>">
+            <div class="card text-white bg-dark mb-3 mx-3" style="max-width: 18rem;">
+          <div class="card-header">Header</div>
+          <div class="card-body">
+            <h5 class="card-title">Dark card title</h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+          </div>
+        </div>
+            <div class="card text-white bg-success mb-3 mx-3" style="max-width: 18rem;">
+          <div class="card-header">Header</div>
+          <div class="card-body">
+            <h5 class="card-title">Success card title</h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+          </div>
+        </div>
+            <div class="card text-white bg-danger mb-3 mx-3" style="max-width: 18rem;">
+          <div class="card-header">Header</div>
+          <div class="card-body">
+            <h5 class="card-title">Danger card title</h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+          </div>
+        </div>
+            <div class="card text-white bg-warning mb-3 mx-3" style="max-width: 18rem;">
+  <div class="card-header">Header</div>
+  <div class="card-body">
+    <h5 class="card-title">Warning card title</h5>
+    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+  </div>
+</div>
+    </div>
+</div>
+
+{% endblock %}
+{% block js %}
+<script>
+// Find out the cart items from localStorage
+if (localStorage.getItem('cart') == null) {
+    var cart = {};
+} else {
+    cart = JSON.parse(localStorage.getItem('cart'));
+    updateCart(cart);
+}
+
+function clearCart(){
+        cart = JSON.parse(localStorage.getItem('cart'));
+        localStorage.clear();
+        cart = {};
+        updateCart(cart);
+        updatePopover(cart);
+}
+
+function updateCart(cart) {
+    updatePopover();
+    var sum = 0;
+    for (var item in cart) {
+        sum = sum + cart[item][0];
+    }
+    localStorage.setItem('cart', JSON.stringify(cart));
+    document.getElementById('cart').innerHTML = sum;
+}
+
+// If the add to cart button is clicked, add/increment the item
+
+$('.divpr').on('click', 'button.cart', function(){
+    var idstr = this.id.toString();
+    if (cart[idstr] != undefined) {
+        qty = cart[idstr][0] + 1;
+    } else {
+        qty = 1;
+        name = document.getElementById('name' + idstr).innerHTML;
+        price = document.getElementById('price' + idstr).innerHTML;
+        cart[idstr] = [qty, name, parseInt(price)];
+    }
+    updateCart(cart);
+
+});
+
+
+//Add Popover to cart
+$('#popcart').popover();
+updatePopover(cart);
+function updatePopover(cart){
+
+    var popStr = "";
+    popStr = popStr + "<h5> Cart for your items ! </h5><div class='mx-2 my-2'>";
+    var i = 1;
+    for (var item in cart){
+        popStr = popStr + "<b>" + i + "</b>. ";
+        popStr = popStr + cart[item][1].slice(0,10) + "... Qty: " + cart[item][0]  + "   Price: "+ cart[item][2] + "/-"+ '<br>';
+        i = i+1;
+    }
+    popStr = popStr + "</div>"
+    document.getElementById('popcart').setAttribute('data-content', popStr);
+    $('#popcart').popover('show');
+}
+
+{% if que %}
+alert('Thanks for contacting with us. We will get back to you soon!');
+document.location = "/shop/contact";
+{% endif %}
+</script>
+{% endblock %}
